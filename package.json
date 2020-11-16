@@ -10,6 +10,7 @@
     "@fortawesome/fontawesome-free": "^5.15.1",
     "bootstrap": "^4.5.3",
     "cookie-parser": "^1.4.5",
+    "datatables.net": "^1.10.22",
     "debug": "~2.6.9",
     "dotenv": "^8.2.0",
     "ejs": "^2.6.2",
