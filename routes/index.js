@@ -13,8 +13,6 @@ const config = {
 
 const pool = new pg.Pool(config);
 
-console.log(config);
-
 // Users
 // get all users
 
@@ -34,6 +32,33 @@ router.get('/users', (req, res, next) => {
     });
   });
 });
+
+router.post('/user/save', (req, res, next) => {
+  pool.connect((errcon, client, done) => {
+    if (errcon) {
+      return console.error('Error fetching client from pool.', errcon)
+    }
+
+    const user = {};
+    user.first_name = req.body.first_name;
+    user.last_name = req.body.last_name;
+    user.username = req.body.username;
+
+    const qry = `INSERT INTO users (username, first_name, last_name) VALUES('${user.username}', '${user.first_name}', '${user.last_name}') returning user_id`
+    client.query(qry, (errres, result) => {
+      done()
+
+      if (errres) {
+        return console.error('Error running query. ', errres);
+      }
+      user.result = result;
+
+      return res.send(user);
+    })
+
+    return null;
+  })
+})
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
