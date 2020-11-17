@@ -13,8 +13,18 @@ const config = {
 
 const pool = new pg.Pool(config);
 
+router.get('/getUsers', (req, res) => {
+  pool.connect((errcon, client) => {
+    client.query('SELECT * FROM users', (errqry, result) => {
+      res.send({
+        users: result.rows
+      })
+    })
+  })
+})
+
 // Users
-// get all users
+// get and display all users
 
 router.get('/users', (req, res, next) => {
   pool.connect((errcon, client, done) => {
@@ -76,6 +86,32 @@ router.put('/user/:id', (req, res, next) => {
                   SET username = '${user.username}', 
                       first_name = '${user.first_name}', 
                       last_name = '${user.last_name}' 
+                WHERE user_id = ${user.user_id}`;
+    client.query(qry, (errres, result) => {
+      done()
+
+      if (errres) {
+        return console.error('Error running query. ', errres);
+      }
+      user.result = result;
+
+      return res.send(user);
+    })
+
+    return null;
+  })
+})
+
+router.delete('/user/:id', (req, res, next) => {
+  pool.connect((errcon, client, done) => {
+    if (errcon) {
+      return console.error('Error fetching client from pool.', errcon)
+    }
+
+    const user = {};
+    user.user_id = req.params.id;
+
+    const qry = `DELETE FROM users 
                 WHERE user_id = ${user.user_id}`;
     client.query(qry, (errres, result) => {
       done()
