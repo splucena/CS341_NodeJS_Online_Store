@@ -60,6 +60,38 @@ router.post('/user/save', (req, res, next) => {
   })
 })
 
+router.put('/user/:id', (req, res, next) => {
+  pool.connect((errcon, client, done) => {
+    if (errcon) {
+      return console.error('Error fetching client from pool.', errcon)
+    }
+
+    const user = {};
+    user.first_name = req.body.first_name;
+    user.last_name = req.body.last_name;
+    user.username = req.body.username;
+    user.user_id = req.params.id;
+
+    const qry = `UPDATE users 
+                  SET username = '${user.username}', 
+                      first_name = '${user.first_name}', 
+                      last_name = '${user.last_name}' 
+                WHERE user_id = ${user.user_id}`;
+    client.query(qry, (errres, result) => {
+      done()
+
+      if (errres) {
+        return console.error('Error running query. ', errres);
+      }
+      user.result = result;
+
+      return res.send(user);
+    })
+
+    return null;
+  })
+})
+
 /* GET home page. */
 router.get('/', (req, res, next) => {
   res.render('pages/index', {

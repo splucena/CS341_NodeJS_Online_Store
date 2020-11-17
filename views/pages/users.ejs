@@ -9,9 +9,27 @@
   <% include ../partials/nav.ejs %>
   <main>
     <div class="row">
-
       <div class="col">
         <h1><%= title %></h1>
+        <script>
+          $(document).ready(() => {
+            // Populate user table
+            $('#example').DataTable({
+              "columnDefs": [{
+                "orderDataType": "dom-input",
+                "targets": 0, // Just the first column
+              }, ],
+            });
+          });
+
+          $.fn.dataTable.ext.order['dom-input'] = function (settings, col) {
+            return this.api().column(col, {
+              order: 'index'
+            }).nodes().map(function (td, i) {
+              return $('input', td).val();
+            });
+          }
+        </script>
         <table id="example" class="table">
           <thead class="thead-dark">
             <tr>
@@ -26,103 +44,174 @@
           <tbody>
             <% for (let i = 0; i < users.length; i++) {%>
             <tr>
-              <input type="hidden" value="<%= users[i]['user_id'] %>">
-              <td><%= users[i]['first_name'] %></td>
-              <td><%= users[i]['last_name'] %></td>
-              <td><%= users[i]['username'] %></td>
-              <td><button class="btn btn-primary"><i class="fas fa-edit"></i></button></td>
-              <td><button class="btn btn-success"><i class="fas fa-sticky-note"></i></button></td>
-              <td><button class="btn btn-danger"><i class="fas fa-trash"></i></button></td>
+              <input type="hidden" value="<%= users[i]['user_id'] %>" />
+              <td>
+                <input class="form-control" type="text" id="first_name_<%= users[i]['user_id'] %>"
+                  value="<%= users[i]['first_name'] %>" />
+              </td>
+              <td>
+                <input class="form-control" type="text" id="last_name_<%= users[i]['user_id'] %>"
+                  value="<%= users[i]['last_name'] %>" />
+              </td>
+              <td>
+                <input class="form-control" type="text" id="username_<%= users[i]['user_id'] %>"
+                  value="<%= users[i]['username'] %>" />
+              </td>
+              <td>
+                <button class="btn btn-primary" id="<%= users[i]['user_id'] %>" onclick="updateUser(this.id)">
+                  <i class="fas fa-edit"></i>
+                </button>
+              </td>
+              <td>
+                <button class="btn btn-success"><i class="fas fa-sticky-note"></i></button>
+              </td>
+              <td>
+                <button class="btn btn-danger"><i class="fas fa-trash"></i></button>
+              </td>
             </tr>
             <%}%>
-        </tbody>
-        </table>
-        <script>
-            $(document).ready(function() {
-    $('#example').DataTable();
-} );
-        </script>
+            </tbody>
+          </table>
         </div>
         <div class="col">
-            <h1>Sign Up</h1>
-            <p id="result"></p>
-            <form id="user_form" class="was-validated" enctype="multipart/form-data">
-                <div class="form-group">
-                  <label for="first_name">First Name:</label>
-                  <input type="text" class="form-control" id="first_name" placeholder="Enter username" name="first_name" required>
-                  <div class="valid-feedback">Valid.</div>
-                  <div class="invalid-feedback">Please fill out this field.</div>
-                </div>
-                <div class="form-group">
-                  <label for="last_name">Last Name:</label>
-                  <input type="text" class="form-control" id="last_name" placeholder="Enter username" name="last_name" required>
-                  <div class="valid-feedback">Valid.</div>
-                  <div class="invalid-feedback">Please fill out this field.</div>
-                </div>
-                <div class="form-group">
-                  <label for="username">Username:</label>
-                  <input type="text" class="form-control" id="username" placeholder="Enter username" name="username" required>
-                  <div class="valid-feedback">Valid.</div>
-                  <div class="invalid-feedback">Please fill out this field.</div>
-                </div>
-                <div class="form-group">
-                  <label for="pwd">Password:</label>
-                  <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="pswd" required>
-                  <div class="valid-feedback">Valid.</div>
-                  <div class="invalid-feedback">Please fill out this field.</div>
-                </div>
-                <div class="form-group form-check">
-                  <label class="form-check-label">
-                    <input class="form-check-input" type="checkbox" name="remember" required> I agree on blabla.
-                    <div class="valid-feedback">Valid.</div>
-                    <div class="invalid-feedback">Check this checkbox to continue.</div>
-                  </label>
-                </div>
-                <button type="submit" id="submit" class="btn btn-primary">Submit</button>
-            </form>
-              <script>
-               $( document ).ready(() => {
-                $('#user_form').submit((e) => {
-                  e.preventDefault();
-                  ajaxPost();
-                })
-               });
+          <h1>Sign Up</h1>
+          <p id="result"></p>
+          <form id="user_form" class="was-validated" enctype="multipart/form-data">
+            <div class="form-group">
+              <label for="first_name">First Name:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="first_name"
+                placeholder="Enter first name"
+                name="first_name"
+                required
+              />
+              <div class="valid-feedback">Valid.</div>
+              <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+              <label for="last_name">Last Name:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="last_name"
+                placeholder="Enter username"
+                name="last_name"
+                required
+              />
+              <div class="valid-feedback">Valid.</div>
+              <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+              <label for="username">Username:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="username"
+                placeholder="Enter username"
+                name="username"
+                required
+              />
+              <div class="valid-feedback">Valid.</div>
+              <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+              <label for="pwd">Password:</label>
+              <input
+                type="password"
+                class="form-control"
+                id="pwd"
+                placeholder="Enter password"
+                name="pswd"
+                required
+              />
+              <div class="valid-feedback">Valid.</div>
+              <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group form-check">
+              <label class="form-check-label">
+                <input class="form-check-input" type="checkbox" name="remember" required /> I agree
+                on blabla.
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Check this checkbox to continue.</div>
+              </label>
+            </div>
+            <button type="submit" id="submit" class="btn btn-primary">Submit</button>
+          </form>
+          <script>
+            $(document).ready(() => {
 
-               function ajaxPost() {
-                 let formData = {
-                   first_name: $('#first_name').val(),
-                   last_name: $('#last_name').val(),
-                   username: $('#username').val()
-                 }
+              $('#user_form').submit((e) => {
+                e.preventDefault();
+                ajaxPost();
+              });
+            });
 
-                 // Post
-                 $.ajax({
-                   type: 'POST',
-                   url: '/user/save',
-                   data: formData,
-                   dataType: 'json',
-                   success : (user) => {
-                    console.log(user);
-                     $('#result').html(user.first_name);
-                   },
-                   error: (e) => {
-                    console.log('Error: ', e)
-                   }
-                 });
-                   // Reset FormData after Posting
-                   resetData();
-               }
+            // Post user
+            function ajaxPost() {
+              let formData = {
+                first_name: $('#first_name').val(),
+                last_name: $('#last_name').val(),
+                username: $('#username').val(),
+              };
 
-               function resetData() {
-                 $('#first_name').val("");
-                 $('#last_name').val("");
-                 $('#username').val("");
-               }
-              </script>
+              // Post
+              $.ajax({
+                type: 'POST',
+                url: '/user/save',
+                data: formData,
+                dataType: 'json',
+                success: (user) => {
+                  console.log(user);
+                  $('#result').html(user.first_name);
+                },
+                error: (e) => {
+                  console.log('Error: ', e);
+                },
+              });
+              // Reset FormData after Posting
+              resetData();
+            }
+
+            function resetData() {
+              $('#first_name').val('');
+              $('#last_name').val('');
+              $('#username').val('');
+            }
+
+            // Update
+
+            function updateUser(user_id) {
+              
+              const uid = user_id;
+              const formData = {
+                first_name: $('#first_name_' + uid).val(),
+                last_name: $('#last_name_' + uid).val(),
+                username: $('#username_' + uid).val()
+              }
+
+              console.log(formData);
+
+              // Post
+              $.ajax({
+                type: 'PUT',
+                url: '/user/' + uid,
+                data: formData,
+                dataType: 'json',
+                success: (user) => {
+                  console.log(user);
+                },
+                error: (e) => {
+                  console.log('Error: ', e);
+                },
+              });
+            }
+          </script>
         </div>
-        </div>
-  </main>
-  <% include ../partials/footer.ejs %>
+      </div>
+    </main>
+    <% include ../partials/footer.ejs %>
 </body>
 
 </html>
