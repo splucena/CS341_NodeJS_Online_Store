@@ -27,14 +27,17 @@
 						<tr id="tr_<%= users[i]['user_id'] %>">
 							<input type="hidden" value="<%= users[i]['user_id'] %>" />
 							<td>
+								<span class="hide"><%= users[i]['first_name'] %></span>
 								<input class="form-control" type="text" id="first_name_<%= users[i]['user_id'] %>"
 									value="<%= users[i]['first_name'] %>" />
 							</td>
 							<td>
+								<span class="hide"><%= users[i]['last_name'] %></span>
 								<input class="form-control" type="text" id="last_name_<%= users[i]['user_id'] %>"
 									value="<%= users[i]['last_name'] %>" />
 							</td>
 							<td>
+								<span class="hide"><%= users[i]['username'] %></span>
 								<input class="form-control" type="text" id="username_<%= users[i]['user_id'] %>"
 									value="<%= users[i]['username'] %>" />
 							</td>
@@ -105,7 +108,7 @@
                                 class="form-control"
                                 id="pwd"
                                 placeholder="Enter password"
-                                name="pswd"
+                                name="pwd"
                                 required
                             />
                             <div class="valid-feedback">Valid.</div>
@@ -143,14 +146,14 @@
                                     //$('#example').DataTable().clear().draw();
                                     let rowNode = (table.row
                                         .add([
-                                            `<td>
+										`<td><span class="hide">${user.first_name}</span>
                 <input class="form-control" type="text" id="first_name_${user.user_id}"
             value="${user.first_name}" />
             </td>`,
-                                            `<td>
+                                            `<td><span class="hide">${user.last_name}</span>
               <input class="form-control" type="text" id="last_name_${user.user_id}" value="${user.last_name}" />
             </td>`,
-                                            `<td>
+                                            `<td><span class="hide">${user.username}</span>
               <input class="form-control" type="text" id="username_${user.user_id}" value="${user.username}" />
             </td>`,
                                             `<td>
@@ -163,9 +166,16 @@
             </td>`,
                                         ])
                                         .node().id = `tr_${user.user_id}`);
-                                    //.draw();
-                                    table.draw(false);
-                                    //$( rowNode ).attr('id', 'Test');
+									//.draw();
+									//$(rowNode).css('color', 'red').animate( {color: 'black'});
+									
+									table.draw(false);
+
+									// if sorting is working this will not work
+									var objRow = $('table tbody tr:last');
+									$(objRow).addClass('highlight');
+									//$( rowNode ).attr('id', 'Test');
+									
                                 },
                                 error: (e) => {
                                     console.log('Error: ', e);
@@ -178,7 +188,8 @@
                         function resetData() {
                             $('#first_name').val('');
                             $('#last_name').val('');
-                            $('#username').val('');
+							$('#username').val('');
+							$('#pwd').val('');
                         }
 
                         // Update

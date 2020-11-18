@@ -18,3 +18,13 @@ footer {
   margin: auto 0;
   text-align: center;
 }
+
+.highlight > td > input[type=text] {
+  color: green;
+  border: solid 1px green;
+}
+
+.hide {
+  visibility: hidden;
+  display: none;
+}

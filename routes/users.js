@@ -11,7 +11,7 @@ const config = {
 	port: process.env.DB_PORT,
 };
 
-const pool = new pg.Pool({
+const pool = new pg.Pool(config || {
 	connectionString: process.env.DATABASE_URL
 });
 
