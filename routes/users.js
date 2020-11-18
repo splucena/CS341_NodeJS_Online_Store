@@ -11,7 +11,7 @@ const config = {
 	port: process.env.DB_PORT,
 };
 
-const pool = new pg.Pool(config);
+const pool = new pg.Pool(config || process.env.DATABASE_URL);
 
 router.get('/getUsers', (req, res) => {
 	pool.connect((errcon, client) => {
