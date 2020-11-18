@@ -151,77 +151,104 @@
                 success: (user) => {
                   console.log(user);
                   $('#result').html(user.first_name);
-                  $('#example').DataTable().clear().draw();
-                },
-                error: (e) => {
-                  console.log('Error: ', e);
-                },
-              });
-              // Reset FormData after Posting
-              resetData();
+                  //$('#example').DataTable().clear().draw();
+                let rowNode =  table
+                  .row.add(
+                    [`<td>
+                <input class="form-control" type="text" id="first_name_"
+            value="${user.first_name}" />
+            </td>`,
+            `<td>
+              <input class="form-control" type="text" id="last_name_>" value="" />
+            </td>`,
+            `<td>
+              <input class="form-control" type="text" id="username_" value="" />
+            </td>`,
+            `<td>
+              <button class="btn btn-primary" id="" onclick="updateUser(this.id)">
+                <i class="fas fa-edit"></i>
+              </button>
+            </td>`,
+            `<td>
+              <button class="btn btn-success"><i class="fas fa-sticky-note"></i></button>
+            </td>`,
+            `<td>
+              <button class="btn btn-danger" id="${user.user_id}" onclick="deleteUser(this.id)"><i class="fas fa-trash"></i></button>
+            </td>`]
+            ).node().id = `tr_${user.user_id}`
+            //.draw();
+            table.draw(false);
+            //$( rowNode ).attr('id', 'Test');
+            },
+            error: (e) => {
+            console.log('Error: ', e);
+            },
+            });
+            // Reset FormData after Posting
+            resetData();
             }
 
             function resetData() {
-              $('#first_name').val('');
-              $('#last_name').val('');
-              $('#username').val('');
+            $('#first_name').val('');
+            $('#last_name').val('');
+            $('#username').val('');
             }
 
             // Update
 
             function updateUser(user_id) {
-              
-              const uid = user_id;
-              const formData = {
-                first_name: $('#first_name_' + uid).val(),
-                last_name: $('#last_name_' + uid).val(),
-                username: $('#username_' + uid).val()
-              }
 
-              // Update
-              $.ajax({
-                type: 'PUT',
-                url: '/user/' + uid,
-                data: formData,
-                dataType: 'json',
-                success: (user) => {
-                  console.log(user);
-                },
-                error: (e) => {
-                  console.log('Error: ', e);
-                },
-              });
+            const uid = user_id;
+            const formData = {
+            first_name: $('#first_name_' + uid).val(),
+            last_name: $('#last_name_' + uid).val(),
+            username: $('#username_' + uid).val()
+            }
+
+            // Update
+            $.ajax({
+            type: 'PUT',
+            url: '/user/' + uid,
+            data: formData,
+            dataType: 'json',
+            success: (user) => {
+            console.log(user);
+            },
+            error: (e) => {
+            console.log('Error: ', e);
+            },
+            });
             }
 
             function deleteUser(user_id) {
-              const uid = user_id;
-              
-              if (confirm('Are you sure you want to delete this record?')) {
-                // Delete
-                $.ajax({
-                  type: 'DELETE',
-                  url: '/user/' + uid,
-                  data: {},
-                  dataType: 'json',
-                  success: (user) => {
-                    console.log(user);
-                    //$('#tr_' + uid).remove();
-                    table
-                    .row('#tr_' + uid)
-                    .remove()
-                    .draw();
-                  },
-                  error: (e) => {
-                    console.log('Error: ', e);
-                  },
-                });
-              }
+            const uid = user_id;
+
+            if (confirm('Are you sure you want to delete this record?')) {
+            // Delete
+            $.ajax({
+            type: 'DELETE',
+            url: '/user/' + uid,
+            data: {},
+            dataType: 'json',
+            success: (user) => {
+            console.log(user);
+            //$('#tr_' + uid).remove();
+            table
+            .row('#tr_' + uid)
+            .remove()
+            .draw();
+            },
+            error: (e) => {
+            console.log('Error: ', e);
+            },
+            });
             }
-          </script>
-        </div>
+            }
+            </script>
       </div>
-    </main>
-    <% include ../partials/footer.ejs %>
+    </div>
+  </main>
+  <% include ../partials/footer.ejs %>
 </body>
 
 </html>

@@ -61,7 +61,10 @@ router.post('/user/save', (req, res, next) => {
       if (errres) {
         return console.error('Error running query. ', errres);
       }
+
+      console.log(result);
       user.result = result;
+      user.user_id = result.rows[0].user_id;
 
       return res.send(user);
     })
