@@ -2,6 +2,12 @@
     "trailingComma": "es5",
     "printWidth": 100,
     "singleQuote": true,
-    "tabWidth": 4,
-    "useTabs": true
+    "editor.formatOnSave": true,
+	"proseWrap": "always",
+	"tabWidth": 4,
+	"requireConfig": false,
+	"useTabs": false,
+	"bracketSpacing": true,
+	"jsxBracketSameLine": false,
+	"semi": true
 }
